@@ -1,3 +1,3 @@
-# Scrimba React Project 3
+# Scrimba React Project - Section 4
 
-Last project of React Basics - Tenzies game
+Tenzies game
