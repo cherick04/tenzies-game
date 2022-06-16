@@ -7,9 +7,10 @@ export default function App() {
   const [dice, setDice] = useState(allNewDice())
   const [tenzies, setTenzies] = useState(false)
   const [rolls, setRolls] = useState(0)
+  const [isBestTime, setIsBestTime] = useState(false)
   const [time, setTime] = useState(() => new Date())
   const [bestTime, setBestTime] = useState(
-    () => JSON.parse(localStorage.getItem('bestTime')) || []
+    () => JSON.parse(localStorage.getItem('bestTime')) || 0
   )
 
   useEffect(() => {
@@ -21,11 +22,13 @@ export default function App() {
     }
   }, [dice])
 
-  // useEffect(() => {
-  //   if (tenzies) {
-  //     localStorage.setItem('bestTime', JSON.stringify(bestTime))
-  //   }
-  // }, [tenzies])
+  useEffect(() => {
+    if ((bestTime && time < bestTime) || bestTime === 0) {
+      setIsBestTime(true)
+      setBestTime(time)
+    }
+    localStorage.setItem('bestTime', JSON.stringify(bestTime))
+  }, [time, bestTime])
 
   function generateNewDie() {
     return {
@@ -49,6 +52,7 @@ export default function App() {
       setTenzies(false)
       setRolls(0)
       setTime(new Date())
+      setIsBestTime(false)
     } else {
       setDice((oldDice) =>
         oldDice.map((die) => {
@@ -71,7 +75,7 @@ export default function App() {
   }
 
   function formatTime(elapsed) {
-    var milliseconds = Math.floor((elapsed % 1000) / 100),
+    var milliseconds = elapsed % 1000,
       seconds = Math.floor((elapsed / 1000) % 60),
       minutes = Math.floor((elapsed / (1000 * 60)) % 60),
       hours = Math.floor((elapsed / (1000 * 60 * 60)) % 24)
@@ -95,11 +99,14 @@ export default function App() {
   return (
     <>
       {tenzies && (
-        <h2 className="winning--lbl">
-          You won with only {rolls} rolls!
-          <br />
-          Your time: {formatTime(time)}
-        </h2>
+        <>
+          <h2 className="winning--lbl">
+            You won {rolls < 10 && 'only'} rolling {rolls} times!
+            <br />
+            Your time: {formatTime(time)}
+          </h2>
+          {isBestTime && <h2 className="bestTime">New Record!</h2>}
+        </>
       )}
       <main>
         {tenzies && (

@@ -9,6 +9,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  text-align: center;
 }
 
 main {
@@ -26,8 +27,12 @@ main {
 
 .winning--lbl {
   color: white;
-  text-align: center;
 }
+
+.bestTime {
+  color: #b00101;
+}
+
 .title {
   font-size: 40px;
   margin: 0;
